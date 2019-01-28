@@ -3,7 +3,7 @@
 To Install: <br/>
 ``devtools::install_github("gkane26/rforage")``
 
-Exmaple:<br/>
+Example:<br/>
 
 ```
 library(rforage)
