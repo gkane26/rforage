@@ -1,0 +1,16 @@
+Package: ForageMedPC
+Type: Package
+Title: Foraging Task Analysis
+Version: 1.0
+Author: Gary Kane
+Maintainer: Gary Kane <gkane@alumni.princeton.edu>
+Description: Functions for preprocesing data from Med Associates operant chamber based patch-foraging task. This package does not perform statistical analysis at the moment.
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
+Imports:
+    rmedpc,
+    plyr
+Remotes:
+    gkane26/rmedpc
+RoxygenNote: 6.1.1
