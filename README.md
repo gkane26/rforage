@@ -1,6 +1,6 @@
 # rforage: Package to import MedPC raw data files from foraging task into an R data frame
 
-To install, make sure you have the devtools package. If not,: <br/>
+To install, make sure you have the devtools package. If not, run: <br/>
 ``install.packages("devtools")``
 
 Next, install this package directly from github: <br/>
@@ -14,7 +14,7 @@ First, get the path to MedPC data files that you would like to import. These can
 Next, use the med_to_dt function and get_patch_data function to import the trial-by-trial data from the MedPC file and to add basic variables for each patch (number of presses per patch, how many presses until leaving, time spent in each patch, etc.).
 ```
 library(rforage)
-dat = med_to_dt(file[1], travel=10, group="DREADD", treatment="CNO")
+dat = med_to_dt(files[1], travel=10, group="DREADD", treatment="CNO")
 dat = get_patch_data(dat)
 ```
 
