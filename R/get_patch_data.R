@@ -83,7 +83,7 @@ get_patch_data <- function(dat, leverOmission=F, removeOmission=T, removeIncompl
     return(d)
   }
 
-  dat = plyr::ddply(dat, .(PatchNum), patches)
+  dat = plyr::ddply(dat, "PatchNum", patches)
 
   #remove omissions
   if(removeOmission) dat = dat[dat$Omission==0,]

@@ -9,6 +9,9 @@ load_forage_data(file)
 \arguments{
 \item{file}{string or vector of strings; complete path to file name or vector of file paths. If a vector, returns one data frame.}
 }
+\value{
+resulting data frame
+}
 \description{
 Load data frame of foraging data that was previously saved using save_forage_data
 }

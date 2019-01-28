@@ -3,6 +3,8 @@
 #'
 #' @param file string or vector of strings; complete path to file name or vector of file paths. If a vector, returns one data frame.
 #'
+#' @return resulting data frame
+#'
 #' @export
 load_forage_data = function(file){
 
