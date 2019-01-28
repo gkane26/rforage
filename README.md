@@ -25,7 +25,7 @@ save_file_name = save_forage_data(dat, path="~/Desktop", as_csv=T) # for csv
 ```
 
 And these files can be reloaded for further analysis. Files can be loaded one at a time, or multiple at once into a single data frame by using a vector of filenames: <br/>
-``
+```
 reloaded_data = load_forage_data(save_file_name) # can load 1 or multiple files, returns a single data frame
 reloaded_data = load_forage_data(c(save_file_name, save_file_name)) # loads multiple files, still returns a single data frame
 ```
