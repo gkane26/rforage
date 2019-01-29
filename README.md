@@ -6,10 +6,10 @@ This package contains 4 functions:
   - save_forage_data: saves file to a specified path
   - load_forage_data: loads data from a specified file
 
-
 ### Installation
 
-First, make sure you have the devtools package installed. If not, run:<br/> ``install.packages("devtools")``
+First, make sure you have the devtools package installed. If not, run:<br/>
+``install.packages("devtools")``
 
 Next, install rforage directly from github:<br/>
 ``devtools::install_github("gkane26/rforage")``
