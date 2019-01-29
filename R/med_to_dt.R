@@ -51,7 +51,7 @@ med_to_dt<-function(file, travel=10, group="", treatment="", varITI = F, ITI = 7
   }
 
   dat = data.table(Subject = medData$Subject,
-                   Group = medData$Group,
+                   Group = group,
                    Date = date,
                    Travel = travel,
                    Treatment = treatment,
