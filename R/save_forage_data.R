@@ -8,27 +8,21 @@
 #'
 #' @return complete path to saved file
 #' @export
-save_forage_data = function(dat, path="", name="", as_csv=F){
+save_forage_data = function(dat, path=getwd(), name="", as_csv=F){
 
   if(name==""){
     name = paste(dat$Subject[1], dat$Date[1], sep="_")
   }
+  name = file.path(path, name)
 
   if(as_csv){
     name = paste(name, ".csv", sep="")
-    if(path !=""){
-      name = file.path(path, name)
-    }
-      write.csv(dat, name)
+    write.csv(dat, name)
   }else{
     name = paste(name, ".Rdata", sep="")
-    if(path != ""){
-      name = file.path(path, name)
-    }
     forage_data = dat
     saveRDS(forage_data, name)
   }
 
   return(name)
-
 }

@@ -47,10 +47,10 @@ med_to_dt<-function(file, travel=10, group="", treatment="", varITI = F, ITI = 7
   #Create empty data frame with nrows==number of trials, initialize details
   if(medData$I==0){
     warning("No Trials!!!")
-    return(data.frame(Subject=medData$Subject, Group=group, Date=date, Travel=travel, Treatment=treatment, Trial=0))
+    return(data.table(Subject=medData$Subject, Group=group, Date=date, Travel=travel, Treatment=treatment, Trial=0))
   }
 
-  dat = data.frame(Subject = medData$Subject,
+  dat = data.table(Subject = medData$Subject,
                    Group = medData$Group,
                    Date = date,
                    Travel = travel,
@@ -65,27 +65,27 @@ med_to_dt<-function(file, travel=10, group="", treatment="", varITI = F, ITI = 7
                    RewardVolume_mL = ifelse(round(medData$F*.060233,3) > 0, round(medData$F*.060233,3), 0))
 
   if(varITI){
-    dat$ITI = medData$H
+    dat[, ITI := medData$H]
   }else{
-    dat$ITI = ifelse(dat$Decision==0, ITI, 0)
+    dat[, ITI := ifelse(dat$Decision==0, ITI, 0)]
   }
-  if(is.numeric(travel)) dat$TravelTime = ifelse(dat$Decision==1, travel, 0) else dat$TravelTime = ifelse(dat$Deision==1, medData$K, 0)
+  if(is.numeric(travel)) dat[, TravelTime := ifelse(Decision==1, travel, 0)] else dat[, TravelTime := ifelse(Deision==1, medData$K, 0)]
 
-  dat$TrialTime = with(dat, DecisionRT+HandlingTime+ITI+TravelTime)
-  dat$CumulativeTime = cumsum(dat$TrialTime)
-  dat$CumulativeReward_mL = cumsum(dat$RewardVolume_mL)
-  dat$InstantRate = dat$RewardVolume_mL / dat$TrialTime
-  dat$CumulativeRate = dat$CumulativeReward_mL / dat$CumulativeTime
+  dat[, TrialTime := DecisionRT+HandlingTime+ITI+TravelTime]
+  dat[, CumulativeTime := cumsum(TrialTime)]
+  dat[, CumulativeReward_mL := cumsum(RewardVolume_mL)]
+  dat[, InstantRate := RewardVolume_mL / TrialTime]
+  dat[, CumulativeRate := CumulativeReward_mL / CumulativeTime]
 
   #add opto data
   if(opto){
-    dat$LaserDecision = c(0, medData$G[-length(medData$G)])
-    dat$PulsePerTrial = medData$J
-    dat$optoFR = dat$PulsePerTrial / (4 + dat$DecisionRT)
+    dat[, LaserDecision := c(0, medData$G[-length(medData$G)])]
+    dat[, PulsePerTrial := medData$J]
+    dat[, optoFR := PulsePerTrial / (4 + DecisionRT)]
   }
 
   #detect omissions
-  dat$Omission = ifelse(dat$Decision==0 & dat$RewardVolume_s<=0, 1, 0)
+  dat[, Omission := ifelse(Decision==0 & RewardVolume_s<=0, 1, 0)]
 
   return(dat)
 }

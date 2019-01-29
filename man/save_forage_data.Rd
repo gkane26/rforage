@@ -4,7 +4,7 @@
 \alias{save_forage_data}
 \title{Save data frame of foraging data to a file}
 \usage{
-save_forage_data(dat, path = "", name = "", as_csv = F)
+save_forage_data(dat, path = getwd(), name = "", as_csv = F)
 }
 \arguments{
 \item{dat}{data frame; created by med_to_dt or get_patch_data function (latter is recommended)}

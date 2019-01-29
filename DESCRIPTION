@@ -8,9 +8,10 @@ Description: Functions for preprocesing data from Med Associates operant chamber
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
+Depends:
+    data.table
 Imports:
-    rmedpc,
-    plyr
+    rmedpc
 Remotes:
     gkane26/rmedpc
 RoxygenNote: 6.1.1
