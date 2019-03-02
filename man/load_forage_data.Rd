@@ -4,7 +4,7 @@
 \alias{load_forage_data}
 \title{Load data frame of foraging data that was previously saved using save_forage_data}
 \usage{
-load_forage_data(file)
+load_forage_data(file, as_dt = T)
 }
 \arguments{
 \item{file}{string or vector of strings; complete path to file name or vector of file paths. If a vector, returns one data frame.}

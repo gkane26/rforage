@@ -6,15 +6,20 @@
 #' @return resulting data frame
 #'
 #' @export
-load_forage_data = function(file){
+load_forage_data = function(file, as_dt=T){
 
   dat = data.frame()
   for(i in 1:length(file)){
     ext = tools::file_ext(file[i])
     if(ext == "csv"){
-      this_dat = read.csv(file[i])
+      if(as_dt)
+        this_dat = fread(file[i])
+      else
+        this_dat = read.csv(file[i])
     }else if(ext == "Rdata"){
       this_dat = readRDS(file[i])
+      if(as_dt)
+        this_dat = setDT(this_dat)
     }else{
       stop("ERROR :: File type not recognized")
     }
