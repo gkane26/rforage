@@ -17,12 +17,12 @@
 #'
 #' @export
 get_patch_data <- function(dat, leverOmission=F, removeOmission=T, removeIncomplete=T){
-
+  
   #add patch num variable to frame
   dat[, PatchNum := cumsum(Decision)]
   dat[, PatchNum := c(0, PatchNum[-length(PatchNum)])]
   dat[, PatchNum := PatchNum + 1]
-
+  
   ##First, check if valid patch
   # not valid if:
   #   left patch before entering it
@@ -33,65 +33,37 @@ get_patch_data <- function(dat, leverOmission=F, removeOmission=T, removeIncompl
   #   starting volume
   #   time in patch
   ##----------------
-  patches = function(d){
-    fullPatch = T
-    if(sum(d$Decision == 0 & d$Omission == 0) == 0) fullPatch = F
-    if(sum(d$Decision) < 1) fullPatch = F
-
-    if(leverOmission){
-      if(nrow(d) >= 3){
-        lastTrials = (nrow(d) - 2):nrow(d)
-        if(d[lastTrials[1], Decision] == 2 & d[lastTrials[2], Decision] == 2 & d[lastTrials[3], DecisionRT] == 7) fullPatch = F
-      }
-    }
-
-    d$fullPatch = fullPatch
-
-    if(fullPatch){
-      pressTrials = numeric(d[,.N])
-      pressTrials[(d$Decision == 0 | d$Decision == 1) & d$Omission == 0] = 1
-      pressTrials = cumsum(pressTrials)
-      d[, PressPatch := pressTrials]
-
-      pressRev = numeric(d[,.N])
-      pressRemain = max(pressTrials) - 1
-      for(i in 1:d[,.N]){
-        if(d[i, Decision] == 0 & d[i, Omission] == 0){
-          pressRev[i] = -pressRemain
-          pressRemain = pressRemain - 1
-        }else{
-          pressRev[i] = -pressRemain
-        }
-      }
-      d[, PressPatch_Inv := pressRev]
-
-      #starting volume
-      d[, startVolume := d[Decision==0 & Omission==0, RewardVolume_mL][1]]
-
-      #time in patch
-      d[, PatchTime := cumsum(TrialTime) + as.numeric(as.character(d[1, Travel]))]
-      d[Decision==1, PatchTime := d[PressPatch_Inv == -1, PatchTime] + d[Decision==1, DecisionRT]]
-
-    }else{
-      d[, PressPatch := NaN]
-      d[, PressPatch_Inv := NaN]
-      d[, startVolume := NaN]
-      d[, PatchTime := NaN]
-    }
-
-    return(d)
+  
+  dat[, valid_patch := ifelse(Decision[1]==1, F, T), .(PatchNum)]
+  dat[valid_patch==T & PatchNum==max(PatchNum), valid_patch := ifelse(Decision[.N]==1, F, T)]
+  if(leverOmission){
+    dat[, last_decision_1 := c(NA, Decision[-.N])]
+    dat[, last_decision_2 := c(NA, last_decision_1[-.N])]
+    dat[, last_decision_3 := c(NA, last_decision_2[-.N])]
+    dat[valid_patch==T, valid_patch := ifelse(sum((last_decision_1==2) & (last_decision_2==2) & (last_decision_3==2)) > 0, F, T)]
+    dat[, last_decision_1 := NULL]
+    dat[, last_decision_2 := NULL]
+    dat[, last_decision_3 := NULL]
   }
 
-  dat = dat[, patches(.SD), "PatchNum"]
+  # add patch data
+  dat[, PressPatch := NaN]
+  dat[, PressPatch_Inv := NaN]
+  dat[, startVolume := NaN]
+  dat[, PatchTime := NaN]
+  
+  dat[valid_patch==T, PressPatch := 1:.N, .(PatchNum)]
+  dat[valid_patch==T, PressPatch_Inv := rev(PressPatch-1), .(PatchNum)]
+  dat[valid_patch==T, startVolume := RewardVolume_mL[1], .(PatchNum)]
+  dat[valid_patch==T, PatchTime := cumsum(TrialTime), .(PatchNum)]
 
   #remove omissions
   if(removeOmission) dat = dat[Omission==0]
   if(leverOmission) dat = dat[Decision!=2]
-  if(removeIncomplete) dat = dat[fullPatch==T]
-
-  # remove fullPatch column
-  dat[, fullPatch := NULL]
-
+  if(removeIncomplete) dat = dat[valid_patch==T]
+  
+  # remove valid_patch column
+  dat[, valid_patch := NULL]
+  
   return(dat)
 }
-
