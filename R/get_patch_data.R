@@ -53,7 +53,7 @@ get_patch_data <- function(dat, leverOmission=F, removeOmission=T, removeIncompl
   dat[, PatchTime := NaN]
   
   dat[valid_patch==T, PressPatch := 1:.N, .(PatchNum)]
-  dat[valid_patch==T, PressPatch_Inv := rev(PressPatch-1), .(PatchNum)]
+  dat[valid_patch==T, PressPatch_Inv := -rev(PressPatch-1), .(PatchNum)]
   dat[valid_patch==T, startVolume := RewardVolume_mL[RewardVolume_mL > 0][1], .(PatchNum)]
   dat[valid_patch==T, PatchTime := cumsum(TrialTime), .(PatchNum)]
 
