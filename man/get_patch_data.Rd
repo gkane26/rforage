@@ -4,8 +4,12 @@
 \alias{get_patch_data}
 \title{Add patch characteristics to initial data frame created by med_to_dt function}
 \usage{
-get_patch_data(dat, leverOmission = F, removeOmission = T,
-  removeIncomplete = T)
+get_patch_data(
+  dat,
+  leverOmission = F,
+  removeOmission = T,
+  removeIncomplete = T
+)
 }
 \arguments{
 \item{dat}{data table; created by med_to_dt function}

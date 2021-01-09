@@ -17,12 +17,12 @@
 #'
 #' @export
 get_patch_data <- function(dat, leverOmission=F, removeOmission=T, removeIncomplete=T){
-  
+
   #add patch num variable to frame
   dat[, PatchNum := cumsum(Decision)]
   dat[, PatchNum := c(0, PatchNum[-length(PatchNum)])]
   dat[, PatchNum := PatchNum + 1]
-  
+
   ##First, check if valid patch
   # not valid if:
   #   left patch before entering it
@@ -33,8 +33,8 @@ get_patch_data <- function(dat, leverOmission=F, removeOmission=T, removeIncompl
   #   starting volume
   #   time in patch
   ##----------------
-  
-  dat[, valid_patch := ifelse(Decision[1]==1, F, T), .(PatchNum)]
+
+  dat[, valid_patch := ifelse(Decision[1]==1 | sum(RewardVolume_mL) <= 0, F, T), .(PatchNum)]
   dat[valid_patch==T & PatchNum==max(PatchNum), valid_patch := ifelse(Decision[.N]==1, F, T)]
   if(leverOmission){
     dat[, last_decision_1 := c(NA, Decision[-.N])]
@@ -51,7 +51,7 @@ get_patch_data <- function(dat, leverOmission=F, removeOmission=T, removeIncompl
   dat[, PressPatch_Inv := NaN]
   dat[, startVolume := NaN]
   dat[, PatchTime := NaN]
-  
+
   dat[valid_patch==T, PressPatch := 1:.N, .(PatchNum)]
   dat[valid_patch==T, PressPatch_Inv := -rev(PressPatch-1), .(PatchNum)]
   dat[valid_patch==T, startVolume := RewardVolume_mL[RewardVolume_mL > 0][1], .(PatchNum)]
@@ -61,9 +61,9 @@ get_patch_data <- function(dat, leverOmission=F, removeOmission=T, removeIncompl
   if(removeOmission) dat = dat[Omission==0]
   if(leverOmission) dat = dat[Decision!=2]
   if(removeIncomplete) dat = dat[valid_patch==T]
-  
+
   # remove valid_patch column
   dat[, valid_patch := NULL]
-  
+
   return(dat)
 }

@@ -4,8 +4,15 @@
 \alias{med_to_dt}
 \title{Convert MedPC File to an R data table}
 \usage{
-med_to_dt(file, travel = 10, group = "", treatment = "",
-  varITI = F, ITI = 7, opto = F)
+med_to_dt(
+  file,
+  travel = 10,
+  group = "",
+  treatment = "",
+  varITI = F,
+  ITI = 7,
+  opto = F
+)
 }
 \arguments{
 \item{file}{string; complete path to MedPC data file}
